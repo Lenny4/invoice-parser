@@ -6,8 +6,15 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     unzip \
-    libzip-dev \
-    && docker-php-ext-install pdo pdo_pgsql zip
+    libzip-dev
+
+# https://github.com/mlocati/docker-php-extension-installer
+ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+RUN install-php-extensions pdo pdo_pgsql zip xdebug
+
+# si l'app était censé allé en prod il aurait fallu faire une image séparée avec et sans xdebug
+COPY php/conf.d/app.dev.ini /usr/local/etc/php/conf.d/app.dev.ini
+ENV PHP_IDE_CONFIG="serverName=parser-app"
 
 # Installer Composer
 RUN curl -sS https://getcomposer.org/installer | php \

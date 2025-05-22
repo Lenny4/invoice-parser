@@ -2,38 +2,24 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Class\Dto;
 
-use App\Repository\InvoiceRepository;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
-#[ORM\Entity(repositoryClass: InvoiceRepository::class)]
-class Invoice
+class InvoiceParserDto
 {
-    #[ORM\Id, ORM\GeneratedValue, ORM\Column(type: Types::INTEGER)]
-    public int $id;
-
-    #[ORM\Column(type: Types::STRING)]
+    #[SerializedName('nom')]
+    #[Groups('parser')]
     public string $name;
 
-    // j'aurais changé le type de cette colonne en INT et multiplé par 100 les valeurs
-    #[ORM\Column(type: Types::FLOAT)]
+    #[SerializedName('montant')]
+    #[Groups('parser')]
     public float $amount;
 
-    #[ORM\Column(type: Types::STRING)]
+    #[SerializedName('devise')]
+    #[Groups('parser')]
     public string $currency;
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-        return $this;
-    }
 
     public function getName(): string
     {
